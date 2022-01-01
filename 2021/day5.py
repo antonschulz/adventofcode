@@ -28,6 +28,14 @@ def partoneFilter(vector):
     else:
         return False, None
 
+def parttwoFilter(vector):
+    if (vector[0] == vector[2]):
+        return True, "X"
+    if (vector[1] == vector [3]):
+        return True, "Y"
+    else:
+        return True, "D"
+
 def addToMatrix(matrix, val, coord):
     if coord == "X":
         for i in range(min(val[1],val[3]), max(val[1],val[3]) + 1):
@@ -43,7 +51,29 @@ def addToMatrix(matrix, val, coord):
                 matrix[val[1]].append(i)
     elif coord == "D":
         #part 2 needs to be implemented
-        pass
+        diffx = val[2] - val[0]
+        diffy = val[3] - val[1]
+        x, y = val[0], val[1]
+        while(x != val[2]):
+            if (y not in matrix):
+                matrix[y] = [x]
+            else:
+                matrix[y].append(x)
+            if (diffx > 0):
+                x += 1
+            elif (diffx < 0):
+                x -= 1
+            if (diffy > 0):
+                y += 1
+            elif (diffy < 0):
+                y -= 1
+        x = val[2]
+        y = val[3]
+        if (y not in matrix):
+            matrix[y] = [x]
+        else:
+            matrix[y].append(x)
+
     
 def countCrosses(matrix):
     count = 0
@@ -57,11 +87,11 @@ def countCrosses(matrix):
                 temp.append(xcoord)
     return count
 
-def partone(data):
+def mainhelper(data, filtfunc):
     matrix = {}
     for vector in data:
         val = values(vector)
-        valid, coord = partoneFilter(val)
+        valid, coord = filtfunc(val)
         if(valid):
             addToMatrix(matrix, val, coord)
     count = countCrosses(matrix)
@@ -72,7 +102,9 @@ def partone(data):
 
 def main():
     data = clean_input(inp)
-    partone(data)
+    mainhelper(data,partoneFilter)
+    mainhelper(data, parttwoFilter)
+
 
 if __name__ == "__main__":
     main()
